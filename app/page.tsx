@@ -465,17 +465,7 @@ export default function Home() {
               <span className="text-lg font-bold text-white">KOI Calendar</span>
             </div>
             
-            <p className="text-gray-300 max-w-2xl mx-auto mb-6">
-              {t('footer.dataSource')}{' '}
-              <a
-                href="https://docs.google.com/spreadsheets/u/0/d/1i3ji5iDuACafqPPR0CPGI4ARk6Z2d853KeKcHef2Wto/htmlview?pli=1"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
-              >
-                {t('footer.officialSheet')}
-              </a>
-            </p>
+           
             
             <div className="text-gray-400 max-w-3xl mx-auto mb-6 text-center">
               <p className="mb-3">
