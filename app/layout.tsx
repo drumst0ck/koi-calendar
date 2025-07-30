@@ -57,9 +57,16 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16", type: "image/x-icon" },
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/logokoi.svg", sizes: "any", type: "image/svg+xml" }
+    ],
     shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    apple: [
+      { url: "/favicon.ico", sizes: "180x180", type: "image/x-icon" },
+      { url: "/logokoi.svg", sizes: "any", type: "image/svg+xml" }
+    ],
   },
   metadataBase: new URL("https://koi-calendar.vercel.app"),
   alternates: {
