@@ -14,15 +14,12 @@
 
 ## 🌟 Características
 
-- **📅 Calendario en Tiempo Real**: Datos extraídos directamente del Google
-  Sheet oficial de KOI
-- **🎮 Múltiples Juegos**: Soporte para League of Legends, Valorant, Rocket
-  League, y más
+- **📅 Calendario en Tiempo Real**: Datos extraídos directamente del Google Sheet oficial de KOI
+- **🎮 Múltiples Juegos**: Soporte para League of Legends, Valorant, Rocket League, y más
 - **🌍 Multiidioma**: Disponible en Español, Inglés y Francés
 - **📱 Responsive**: Diseño adaptativo para móviles, tablets y escritorio
 - **⚡ Rendimiento**: Optimizado con Next.js 15 y Turbopack
-- **🔍 SEO Optimizado**: Meta tags, Open Graph, Twitter Cards y datos
-  estructurados
+- **🔍 SEO Optimizado**: Meta tags, Open Graph, Twitter Cards y datos estructurados
 - **🎨 UI Moderna**: Interfaz elegante con gradientes y efectos visuales
 - **🔗 Enlaces Directos**: Acceso directo a streams de Twitch y YouTube
 
@@ -73,7 +70,8 @@
    pnpm dev
    ```
 
-4. **Abre tu navegador** Visita [http://localhost:3000](http://localhost:3000)
+4. **Abre tu navegador**
+   Visita [http://localhost:3000](http://localhost:3000)
 
 ## 📁 Estructura del Proyecto
 
@@ -130,9 +128,7 @@ La aplicación soporta múltiples idiomas:
 
 ## 📊 Fuente de Datos
 
-Los datos se extraen en tiempo real del
-[Google Sheet oficial de KOI](https://docs.google.com/spreadsheets/u/0/d/1i3ji5iDuACafqPPR0CPGI4ARk6Z2d853KeKcHef2Wto/htmlview?pli=1),
-mantenido por [@aike0070](https://x.com/aike0070).
+Los datos se extraen en tiempo real del [Google Sheet oficial de KOI](https://docs.google.com/spreadsheets/u/0/d/1i3ji5iDuACafqPPR0CPGI4ARk6Z2d853KeKcHef2Wto/htmlview?pli=1), mantenido por [@aike0070](https://x.com/aike0070).
 
 ## 🤝 Contribuir
 
@@ -156,8 +152,7 @@ mantenido por [@aike0070](https://x.com/aike0070).
 
 ### Reportar Bugs
 
-Si encuentras un bug, por favor
-[abre un issue](https://github.com/drumst0ck/koi-calendar/issues) con:
+Si encuentras un bug, por favor [abre un issue](https://github.com/drumst0ck/koi-calendar/issues) con:
 
 - Descripción del problema
 - Pasos para reproducir
@@ -194,13 +189,16 @@ La aplicación es compatible con cualquier proveedor que soporte Next.js:
 
 ## 🔧 Variables de Entorno
 
-Para que la aplicación funcione correctamente, necesitas configurar la API key
-de Google Sheets:
+Para que la aplicación funcione correctamente, necesitas configurar la API key de Google Sheets:
 
 ```env
 # .env.local
 GOOGLE_SHEETS_API_KEY=tu_api_key_de_google_sheets
 
+# Opcionales
+NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+```
 
 ### Obtener la API Key de Google Sheets
 
@@ -229,13 +227,13 @@ GOOGLE_SHEETS_API_KEY=tu_api_key_de_google_sheets
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
-más detalles.
+Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ## 🙏 Agradecimientos
 
-- **[@aike0070](https://x.com/aike0070)** - Por crear y mantener el Google Sheet
-  de datos
+- **[@aike0070](https://x.com/aike0070)** - Por crear y mantener el Google Sheet de datos
+- **Equipo KOI** - Por inspirar este proyecto
+- **Comunidad de KOI** - Por el apoyo y feedback
 
 ## 📞 Contacto
 
@@ -249,4 +247,3 @@ más detalles.
   <p>Hecho con ❤️ para la comunidad de KOI</p>
   <p>© 2025 KOI Calendar. Diseñado para la comunidad de KOI.</p>
 </div>
-```
