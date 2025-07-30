@@ -51,22 +51,29 @@ interface Match {
 
 const getCategoryColor = (category: string) => {
   switch (category.toLowerCase()) {
-    case 'league of legends':
-      return 'from-[#6c5ce7] to-[#00cec9]';
     case 'valorant':
-      return 'from-[#fd79a8] to-[#6c5ce7]';
-    case 'warzone':
-      return 'from-[#00cec9] to-[#6c5ce7]';
-    case 'call of duty':
-      return 'from-[#6c5ce7] to-[#fd79a8]';
-    case 'fifa':
-      return 'from-[#fd79a8] to-[#00cec9]';
-    case 'free fire':
-      return 'from-[#00cec9] to-[#fd79a8]';
+      return 'from-pink-500 to-rose-400';
+    case 'league of legends':
+      return 'from-blue-500 to-cyan-400';
+    case 'cs2':
+    case 'counter-strike 2':
+      return 'from-amber-500 to-orange-400';
+    case 'rocket league':
+      return 'from-violet-500 to-purple-400';
+    case 'fortnite':
+      return 'from-emerald-500 to-green-400';
     case 'apex legends':
-      return 'from-[#6c5ce7] to-[#a29bfe]';
+      return 'from-slate-500 to-gray-400';
+    case 'warzone':
+      return 'from-red-500 to-pink-400';
+    case 'call of duty':
+        return 'from-indigo-500 to-blue-400';
+    case 'fifa':
+      return 'from-green-500 to-emerald-400';
+    case 'free fire':
+      return 'from-orange-500 to-yellow-400';
     default:
-      return 'from-[#636e72] to-[#2d3436]';
+      return 'from-violet-500 to-indigo-400';
   }
 };
 
@@ -186,11 +193,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a0b2e] via-[#0d0d0d] to-[#1a0b2e] opacity-70"></div>
         
         {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-[#6c5ce7] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-          <div className="absolute top-40 right-10 w-96 h-96 bg-[#00cec9] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-1000"></div>
-          <div className="absolute bottom-20 left-1/2 w-96 h-96 bg-[#fd79a8] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-2000"></div>
-          <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#a29bfe] rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-r from-violet-500/15 to-cyan-500/15 rounded-full mix-blend-multiply filter blur-xl animate-pulse opacity-60"></div>
+          <div className="absolute top-40 right-10 w-64 h-64 bg-gradient-to-r from-blue-500/15 to-emerald-500/15 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000 opacity-60"></div>
+          <div className="absolute -bottom-8 left-20 w-64 h-64 bg-gradient-to-r from-pink-500/15 to-violet-500/15 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000 opacity-60"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full mix-blend-multiply filter blur-2xl animate-pulse opacity-50"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
@@ -272,7 +279,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="text-center py-20">
-              <div className="w-16 h-16 bg-gradient-to-r from-[#6c5ce7] to-[#00cec9] rounded-full flex items-center justify-center mx-auto mb-6 animate-spin koi-glow">
+              <div className="w-16 h-16 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-spin koi-glow">
                 <div className="w-8 h-8 bg-[#0d0d0d] rounded-full"></div>
               </div>
               <h3 className="text-2xl font-bold text-gray-300 mb-2">Cargando partidos...</h3>
@@ -302,7 +309,7 @@ export default function Home() {
                   className="group relative koi-card rounded-2xl p-6 hover:transform hover:scale-[1.02] transition-all duration-500"
                 >
                   {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#6c5ce7]/10 to-[#00cec9]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <div className="relative z-10">
                     {/* Header */}
@@ -350,7 +357,7 @@ export default function Home() {
                                 href={stream.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center px-3 py-1 text-xs font-semibold text-white bg-gradient-to-r from-[#fd79a8] to-[#6c5ce7] rounded-full hover:from-[#6c5ce7] hover:to-[#00cec9] transition-all duration-300 hover:scale-105 koi-glow-hover"
+                                className="inline-flex items-center px-3 py-1 text-xs font-semibold text-white bg-gradient-to-r from-violet-500 to-blue-500 hover:from-blue-500 hover:to-cyan-500 rounded-full transition-all duration-300 hover:scale-105 koi-glow-hover"
                               >
                                 {stream.platform === 'YouTube' ? (
                                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
@@ -373,7 +380,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center py-20">
-              <div className="w-24 h-24 bg-gradient-to-r from-[#6c5ce7] to-[#00cec9] rounded-full flex items-center justify-center mx-auto mb-6 opacity-50 koi-glow">
+              <div className="w-24 h-24 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 opacity-50 koi-glow">
                 <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -398,19 +405,57 @@ export default function Home() {
               <span className="text-lg font-bold text-white">KOI Calendar</span>
             </div>
             
-            <p className="text-gray-300 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto mb-6">
               Datos extraídos en tiempo real del{' '}
               <a
                 href="https://docs.google.com/spreadsheets/u/0/d/1i3ji5iDuACafqPPR0CPGI4ARk6Z2d853KeKcHef2Wto/htmlview?pli=1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#00cec9] hover:text-[#fd79a8] transition-colors underline underline-offset-4 font-semibold"
+                className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
               >
                 Google Sheet oficial de KOI
               </a>
             </p>
             
-            <div className="pt-8 text-sm text-gray-400">
+            <div className="text-gray-400 max-w-3xl mx-auto mb-6 text-center">
+              <p className="mb-3">
+                Este es un proyecto de código libre al que cualquiera puede contribuir.
+              </p>
+              <p className="mb-3">
+                Agradecimientos especiales a{' '}
+                <a
+                  href="https://x.com/aike0070"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
+                >
+                  @aike0070
+                </a>
+                {' '}por crear y mantener el sheet de datos.
+              </p>
+              <p>
+                Proyecto desarrollado por{' '}
+                <a
+                  href="https://github.com/drumst0ck"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
+                >
+                  drumst0ck
+                </a>
+                {' '}|{' '}
+                <a
+                  href="https://github.com/drumst0ck/koi-calendar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
+                >
+                  Ver en GitHub
+                </a>
+              </p>
+            </div>
+            
+            <div className="pt-6 text-sm text-gray-500">
               © 2025 KOI Calendar. Diseñado para la comunidad de KOI.
             </div>
           </div>

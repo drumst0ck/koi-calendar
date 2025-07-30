@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  /* KOI Brand Colors - Updated to match official site */
-  --koi-dark-purple: #1a0b2e;
-  --koi-violet: #6c5ce7;
-  --koi-blue: #00cec9;
-  --koi-pink: #fd79a8;
-  --koi-black: #0d0d0d;
-  --koi-gray: #2d3436;
-  --koi-light-gray: #636e72;
-  --koi-accent: #a29bfe;
+  /* KOI Brand Colors - Futuristic & Minimalist */
+  --koi-dark-purple: #0f0f23;
+  --koi-violet: #8b5cf6;
+  --koi-blue: #06b6d4;
+  --koi-pink: #ec4899;
+  --koi-black: #0a0a0a;
+  --koi-gray: #1f2937;
+  --koi-light-gray: #6b7280;
+  --koi-accent: #a855f7;
+  --koi-cyan: #22d3ee;
+  --koi-emerald: #10b981;
 
   /* Theme Colors */
   --background: var(--koi-black);
@@ -30,15 +32,11 @@ html {
 }
 
 body {
-  background: linear-gradient(
-    135deg,
-    var(--koi-black) 0%,
-    var(--koi-dark-purple) 100%
-  );
+  background: linear-gradient(180deg, var(--koi-black) 0%, var(--koi-dark-purple) 50%, var(--koi-black) 100%);
   color: var(--foreground);
-  font-family: "Inter", var(--font-geist-sans), -apple-system,
-    BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Inter', var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
@@ -105,23 +103,14 @@ a:focus-visible {
 }
 
 .koi-gradient-text {
-  background: linear-gradient(
-    135deg,
-    var(--koi-violet) 0%,
-    var(--koi-blue) 50%,
-    var(--koi-pink) 100%
-  );
+  background: linear-gradient(90deg, var(--koi-violet) 0%, var(--koi-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .koi-button {
-  background: linear-gradient(
-    135deg,
-    var(--koi-violet) 0%,
-    var(--koi-blue) 100%
-  );
+  background: linear-gradient(90deg, var(--koi-violet) 0%, var(--koi-blue) 100%);
   border: none;
   color: white;
   font-weight: 600;
@@ -131,9 +120,9 @@ a:focus-visible {
 }
 
 .koi-button:hover {
-  background: linear-gradient(135deg, var(--koi-blue) 0%, var(--koi-pink) 100%);
+  background: linear-gradient(90deg, var(--koi-blue) 0%, var(--koi-cyan) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.25);
 }
 
 .koi-button::before {
@@ -178,11 +167,12 @@ a:focus-visible {
 
 /* Glow effects */
 .koi-glow {
-  box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
 }
 
 .koi-glow-hover:hover {
-  box-shadow: 0 0 30px rgba(108, 92, 231, 0.5);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+  transition: box-shadow 0.3s ease;
 }
 
 /* Text shadows for better readability */
