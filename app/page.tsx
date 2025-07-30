@@ -8,10 +8,62 @@ import Head from 'next/head';
 
 // Utility function to create calendar events
 const createCalendarEvent = (match: Match) => {
-  const startDate = new Date(`${match.date}T${match.time}`);
+  // Validate and parse date/time
+  const dateStr = match.date?.trim();
+  const timeStr = match.time?.trim();
+  
+  if (!dateStr || !timeStr) {
+    throw new Error('Invalid date or time value');
+  }
+  
+  // Skip matches with TBD time
+  if (timeStr.toUpperCase() === 'TBD') {
+    throw new Error('Time is TBD (To Be Determined)');
+  }
+  
+  // Convert Spanish date format to ISO format
+  const parseSpanishDate = (spanishDate: string): string => {
+    const monthMap: { [key: string]: string } = {
+      'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+      'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+      'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+    };
+    
+    // Parse "DD Mes" format
+    const parts = spanishDate.toLowerCase().split(' ');
+    if (parts.length !== 2) {
+      throw new Error(`Invalid date format: ${spanishDate}`);
+    }
+    
+    const day = parts[0].padStart(2, '0');
+    const monthName = parts[1];
+    const month = monthMap[monthName];
+    
+    if (!month) {
+      throw new Error(`Unknown month: ${monthName}`);
+    }
+    
+    // Assume current year for now
+    const currentYear = new Date().getFullYear();
+    return `${currentYear}-${month}-${day}`;
+  };
+  
+  // Convert date and create ISO string
+  const isoDate = parseSpanishDate(dateStr);
+  const dateTimeStr = `${isoDate}T${timeStr}`;
+  const startDate = new Date(dateTimeStr);
+  
+  // Check if the date is valid
+  if (isNaN(startDate.getTime())) {
+    throw new Error(`Invalid date/time: ${dateTimeStr}`);
+  }
+  
   const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // 2 hours duration
   
   const formatDate = (date: Date) => {
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid time value');
+    }
     return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
   };
   
@@ -244,6 +296,7 @@ const CalendarButton = ({ match, isOpen, onToggle, t }: {
       <button
         onClick={(e) => {
           e.stopPropagation();
+          console.log('Calendar button clicked for match:', match);
           onToggle();
         }}
         className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-500 hover:from-green-500 hover:to-emerald-500 rounded-lg transition-all duration-300 hover:scale-105 koi-glow-hover"
@@ -306,9 +359,16 @@ const CalendarModal = ({ isOpen, onClose, match, t }: {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              const calendarEvent = createCalendarEvent(match);
-              window.open(calendarEvent.google, '_blank');
-              onClose();
+              console.log('Google Calendar button clicked for match:', match);
+              try {
+                const calendarEvent = createCalendarEvent(match);
+                console.log('Calendar event created:', calendarEvent);
+                window.open(calendarEvent.google, '_blank');
+                onClose();
+              } catch (error) {
+                console.error('Error creating calendar event:', error);
+                alert('Error: Fecha u hora inválida para este partido');
+              }
             }}
             className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
           >
@@ -327,9 +387,14 @@ const CalendarModal = ({ isOpen, onClose, match, t }: {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              const calendarEvent = createCalendarEvent(match);
-              window.open(calendarEvent.outlook, '_blank');
-              onClose();
+              try {
+                const calendarEvent = createCalendarEvent(match);
+                window.open(calendarEvent.outlook, '_blank');
+                onClose();
+              } catch (error) {
+                console.error('Error creating calendar event:', error);
+                alert('Error: Fecha u hora inválida para este partido');
+              }
             }}
             className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
           >
@@ -343,20 +408,25 @@ const CalendarModal = ({ isOpen, onClose, match, t }: {
           </button>
           
           <button
-             onClick={(e) => {
-               e.stopPropagation();
-               const calendarEvent = createCalendarEvent(match);
-               const blob = new Blob([calendarEvent.ics], { type: 'text/calendar' });
-               const url = URL.createObjectURL(blob);
-               const a = document.createElement('a');
-               a.href = url;
-               a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-               document.body.appendChild(a);
-               a.click();
-               document.body.removeChild(a);
-               URL.revokeObjectURL(url);
-               onClose();
-             }}
+              onClick={(e) => {
+                e.stopPropagation();
+                try {
+                  const calendarEvent = createCalendarEvent(match);
+                  const blob = new Blob([calendarEvent.ics], { type: 'text/calendar' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  onClose();
+                } catch (error) {
+                  console.error('Error creating calendar event:', error);
+                  alert('Error: Fecha u hora inválida para este partido');
+                }
+              }}
             className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
           >
             <svg className="w-5 h-5 mr-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -388,27 +458,74 @@ export default function Home() {
   const generateSportsEventStructuredData = () => {
     if (!matches || matches.length === 0) return null;
     
-    const events = matches.slice(0, 10).map(match => ({
-      "@type": "SportsEvent",
-      "name": match.match,
-      "description": `${match.phase} - ${match.competition}`,
-      "sport": match.category,
-      "startDate": `${match.date}T${match.time}`,
-      "competitor": [
-        {
-          "@type": "SportsTeam",
-          "name": "KOI"
+    const events = matches.slice(0, 10)
+      .filter(match => {
+        // Filter out matches with invalid dates or TBD times
+        const dateStr = match.date?.trim();
+        const timeStr = match.time?.trim();
+        if (!dateStr || !timeStr || timeStr.toUpperCase() === 'TBD') return false;
+        
+        try {
+          // Use the same Spanish date parsing logic
+          const monthMap: { [key: string]: string } = {
+            'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+            'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+            'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+          };
+          
+          const parts = dateStr.toLowerCase().split(' ');
+          if (parts.length !== 2) return false;
+          
+          const day = parts[0].padStart(2, '0');
+          const monthName = parts[1];
+          const month = monthMap[monthName];
+          
+          if (!month) return false;
+          
+          const currentYear = new Date().getFullYear();
+          const isoDate = `${currentYear}-${month}-${day}`;
+          const testDate = new Date(`${isoDate}T${timeStr}`);
+          return !isNaN(testDate.getTime());
+        } catch {
+          return false;
         }
-      ],
-      "location": {
-        "@type": "VirtualLocation",
-        "name": "Online"
-      },
-      "organizer": {
-        "@type": "Organization",
-        "name": "KOI Esports"
-      }
-    }));
+      })
+      .map(match => {
+         // Convert Spanish date to ISO format for structured data
+         const monthMap: { [key: string]: string } = {
+           'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+           'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+           'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+         };
+         
+         const parts = match.date.toLowerCase().split(' ');
+         const day = parts[0].padStart(2, '0');
+         const month = monthMap[parts[1]];
+         const currentYear = new Date().getFullYear();
+         const isoDate = `${currentYear}-${month}-${day}`;
+         
+         return {
+            "@type": "SportsEvent",
+            "name": match.match,
+            "description": `${match.phase} - ${match.competition}`,
+            "sport": match.category,
+            "startDate": `${isoDate}T${match.time}`,
+            "competitor": [
+              {
+                "@type": "SportsTeam",
+                "name": "KOI"
+              }
+            ],
+            "location": {
+              "@type": "VirtualLocation",
+              "name": "Online"
+            },
+            "organizer": {
+              "@type": "Organization",
+              "name": "KOI Esports"
+            }
+          };
+        })
 
     return {
       "@context": "https://schema.org",
