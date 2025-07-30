@@ -328,6 +328,50 @@ const CalendarModal = ({ isOpen, onClose, match, t }: {
 }) => {
   if (!isOpen || typeof window === 'undefined') return null;
 
+  // Detectar si es un dispositivo Apple (iOS/macOS)
+  const isAppleDevice = () => {
+    if (typeof window === 'undefined') return false;
+    const userAgent = window.navigator.userAgent;
+    return /iPad|iPhone|iPod|Macintosh/.test(userAgent);
+  };
+
+  // Función para crear archivo ICS y abrirlo con webcal://
+    const openAppleCalendar = () => {
+      try {
+        const calendarEvent = createCalendarEvent(match);
+        
+        // Crear data URL para el archivo ICS
+        const dataUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(calendarEvent.ics)}`;
+        
+        // Intentar abrir con el protocolo webcal:// (funciona en iOS/macOS)
+        const webcalUrl = dataUrl.replace('data:', 'webcal://');
+        
+        // En iOS/macOS, intentar abrir directamente el calendario
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+          // Para iOS, usar el data URL directamente
+          window.location.href = dataUrl;
+        } else {
+          // Para macOS, intentar webcal:// primero
+          try {
+            window.location.href = webcalUrl;
+          } catch {
+            // Fallback: descargar archivo
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        }
+        
+        onClose();
+       } catch (error) {
+         console.error('Error creating calendar event:', error);
+         alert('Error: Fecha u hora inválida para este partido');
+       }
+     };
+
   return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -356,6 +400,26 @@ const CalendarModal = ({ isOpen, onClose, match, t }: {
         
         {/* Options */}
         <div className="py-2">
+          {/* Botón específico para dispositivos Apple */}
+          {isAppleDevice() && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('Apple Calendar button clicked for match:', match);
+                openAppleCalendar();
+              }}
+              className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
+            >
+              <svg className="w-5 h-5 mr-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <div>
+                <div className="font-medium">Calendario de Apple</div>
+                <div className="text-xs text-gray-400">Abrir en Calendario (iOS/macOS)</div>
+              </div>
+            </button>
+          )}
+          
           <button
             onClick={(e) => {
               e.stopPropagation();
