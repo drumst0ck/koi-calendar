@@ -30,16 +30,6 @@
 
 [Ver Demo en Vivo](https://koicalendar.nexuslegends.com)
 
-## 📸 Capturas de Pantalla
-
-<div align="center">
-  <img src="docs/screenshot-hero.png" alt="Página Principal" width="600">
-  <p><em>Página principal con selector de idioma</em></p>
-  
-  <img src="docs/screenshot-matches.png" alt="Lista de Partidos" width="600">
-  <p><em>Lista de partidos con filtros por juego</em></p>
-</div>
-
 ## 🛠️ Tecnologías
 
 - **Framework**: [Next.js 15](https://nextjs.org/) con App Router
