@@ -335,34 +335,33 @@ const CalendarModal = ({ isOpen, onClose, match, t }: {
     return /iPad|iPhone|iPod|Macintosh/.test(userAgent);
   };
 
-  // Función para crear archivo ICS y abrirlo con webcal://
+  // Función para crear archivo ICS y abrirlo en el calendario nativo de Apple
     const openAppleCalendar = () => {
       try {
         const calendarEvent = createCalendarEvent(match);
         
         // Crear data URL para el archivo ICS
-        const dataUrl = `data:text/calendar;charset=utf8,${encodeURIComponent(calendarEvent.ics)}`;
+        const dataUrl = `data:text/calendar;charset=utf-8,${encodeURIComponent(calendarEvent.ics)}`;
         
-        // Intentar abrir con el protocolo webcal:// (funciona en iOS/macOS)
-        const webcalUrl = dataUrl.replace('data:', 'webcal://');
+        // Detectar el dispositivo
+        const userAgent = navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+        const isMac = /Macintosh/.test(userAgent);
         
-        // En iOS/macOS, intentar abrir directamente el calendario
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-          // Para iOS, usar el data URL directamente
-          window.location.href = dataUrl;
+        if (isIOS) {
+          // Para iOS: usar data URL que iOS puede abrir directamente
+          window.open(dataUrl, '_blank');
+        } else if (isMac) {
+          // Para macOS: usar data URL que macOS puede abrir con Calendar.app
+          window.open(dataUrl, '_blank');
         } else {
-          // Para macOS, intentar webcal:// primero
-          try {
-            window.location.href = webcalUrl;
-          } catch {
-            // Fallback: descargar archivo
-            const a = document.createElement('a');
-            a.href = dataUrl;
-            a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
+          // Fallback para otros dispositivos: descargar archivo
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         }
         
         onClose();
