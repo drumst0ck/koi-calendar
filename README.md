@@ -201,9 +201,6 @@ de Google Sheets:
 # .env.local
 GOOGLE_SHEETS_API_KEY=tu_api_key_de_google_sheets
 
-# Opcionales
-NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
 ### Obtener la API Key de Google Sheets
