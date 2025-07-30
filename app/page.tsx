@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 
 // Custom hook for fetching matches
 const useMatches = () => {
@@ -173,7 +174,48 @@ const parseStreams = (streamText: string, streamUrl?: string) => {
 export default function Home() {
   const { matches, loading, error } = useMatches();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
+  const [filteredMatches, setFilteredMatches] = useState(matches);
+
+  // Generate structured data for sports events
+  const generateSportsEventStructuredData = () => {
+    if (!matches || matches.length === 0) return null;
+    
+    const events = matches.slice(0, 10).map(match => ({
+      "@type": "SportsEvent",
+      "name": match.match,
+      "description": `${match.phase} - ${match.competition}`,
+      "sport": match.category,
+      "startDate": `${match.date}T${match.time}`,
+      "competitor": [
+        {
+          "@type": "SportsTeam",
+          "name": "KOI"
+        }
+      ],
+      "location": {
+        "@type": "VirtualLocation",
+        "name": "Online"
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "KOI Esports"
+      }
+    }));
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Próximos Partidos de KOI",
+      "description": "Lista de próximos partidos del equipo de esports KOI",
+      "itemListElement": events.map((event, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": event
+      }))
+    };
+  };
+
+  const structuredData = generateSportsEventStructuredData();
 
   const categories = ['all', ...Array.from(new Set(matches.map(match => match.category)))];
 
@@ -187,6 +229,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white">
+      {/* Structured Data for SEO */}
+      {structuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+      )}
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background gradient */}
