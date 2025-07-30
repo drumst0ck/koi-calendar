@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://koi-calendar.vercel.app/sitemap.xml
+Sitemap: https://koicalendar.nexuslegends.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1

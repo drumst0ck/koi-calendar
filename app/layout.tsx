@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
-    url: "https://koi-calendar.vercel.app",
+    url: "https://koicalendar.nexuslegends.com",
     title: "KOI Calendar - Calendario de Partidos | Esports KOI",
     description: "Calendario oficial de partidos del equipo de esports KOI. Sigue todos los matches de Valorant, League of Legends, CS2 y más juegos en tiempo real.",
     siteName: "KOI Calendar",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
       { url: "/logokoi.svg", sizes: "any", type: "image/svg+xml" }
     ],
   },
-  metadataBase: new URL("https://koi-calendar.vercel.app"),
+  metadataBase: new URL("https://koicalendar.nexuslegends.com"),
   alternates: {
     canonical: "/",
   },
@@ -96,7 +96,7 @@ export default async function RootLayout({
     "@type": "WebSite",
     "name": "KOI Calendar",
     "description": "Calendario oficial de partidos del equipo de esports KOI",
-    "url": "https://koi-calendar.vercel.app",
+    "url": "https://koicalendar.nexuslegends.com",
     "author": {
       "@type": "Person",
       "name": "drumst0ck",
@@ -107,12 +107,12 @@ export default async function RootLayout({
       "name": "KOI Calendar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://koi-calendar.vercel.app/logokoi.svg"
+        "url": "https://koicalendar.nexuslegends.com/logokoi.svg"
       }
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://koi-calendar.vercel.app/?search={search_term_string}",
+      "target": "https://koicalendar.nexuslegends.com/?search={search_term_string}",
       "query-input": "required name=search_term_string"
     },
     "about": {

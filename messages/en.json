@@ -49,7 +49,12 @@
     "stream": "Stream",
     "watchOn": "Watch on",
     "date": "Date",
-    "time": "Time"
+    "time": "Time",
+    "addReminder": "Add Reminder",
+    "reminderAdded": "Reminder added",
+    "reminderError": "Error adding reminder",
+    "addToCalendar": "Add to Calendar",
+    "downloadICS": "Download ICS file"
   },
   "footer": {
     "dataSource": "Data extracted in real time from the",

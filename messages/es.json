@@ -50,7 +50,12 @@
     "stream": "Stream",
     "watchOn": "Ver en",
     "date": "Fecha",
-    "time": "Hora"
+    "time": "Hora",
+    "addReminder": "Añadir Recordatorio",
+    "reminderAdded": "Recordatorio añadido",
+    "reminderError": "Error al añadir recordatorio",
+    "addToCalendar": "Añadir al Calendario",
+    "downloadICS": "Descargar archivo ICS"
   },
   "footer": {
     "dataSource": "Datos extraídos en tiempo real del",
