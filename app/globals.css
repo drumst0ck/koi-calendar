@@ -1,26 +1,196 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* KOI Brand Colors - Updated to match official site */
+  --koi-dark-purple: #1a0b2e;
+  --koi-violet: #6c5ce7;
+  --koi-blue: #00cec9;
+  --koi-pink: #fd79a8;
+  --koi-black: #0d0d0d;
+  --koi-gray: #2d3436;
+  --koi-light-gray: #636e72;
+  --koi-accent: #a29bfe;
+
+  /* Theme Colors */
+  --background: var(--koi-black);
+  --foreground: #ffffff;
+  --card-bg: rgba(45, 52, 54, 0.3);
+  --border-color: rgba(108, 92, 231, 0.2);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: "Inter", var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(
+    135deg,
+    var(--koi-black) 0%,
+    var(--koi-dark-purple) 100%
+  );
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", var(--font-geist-sans), -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--koi-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--koi-violet);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--koi-blue);
+}
+
+/* Selection styles */
+::selection {
+  background: var(--koi-violet);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--koi-violet);
+  color: white;
+}
+
+/* Focus styles */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--koi-violet);
+  outline-offset: 2px;
+}
+
+/* Animation delays */
+.delay-1000 {
+  animation-delay: 1s;
+}
+
+.delay-2000 {
+  animation-delay: 2s;
+}
+
+/* KOI Custom Styles */
+.koi-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.koi-card:hover {
+  border-color: var(--koi-violet);
+  box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15);
+  transform: translateY(-5px);
+}
+
+.koi-gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--koi-violet) 0%,
+    var(--koi-blue) 50%,
+    var(--koi-pink) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.koi-button {
+  background: linear-gradient(
+    135deg,
+    var(--koi-violet) 0%,
+    var(--koi-blue) 100%
+  );
+  border: none;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.koi-button:hover {
+  background: linear-gradient(135deg, var(--koi-blue) 0%, var(--koi-pink) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+}
+
+.koi-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.koi-button:hover::before {
+  left: 100%;
+}
+
+/* Improved scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--koi-dark-purple);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--koi-violet), var(--koi-blue));
+  border-radius: 6px;
+  border: 2px solid var(--koi-dark-purple);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--koi-blue), var(--koi-pink));
+}
+
+/* Glow effects */
+.koi-glow {
+  box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
+}
+
+.koi-glow-hover:hover {
+  box-shadow: 0 0 30px rgba(108, 92, 231, 0.5);
+}
+
+/* Text shadows for better readability */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Backdrop blur utility */
+.backdrop-blur-strong {
+  backdrop-filter: blur(20px);
 }
