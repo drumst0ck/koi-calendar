@@ -194,13 +194,22 @@ La aplicación es compatible con cualquier proveedor que soporte Next.js:
 
 ## 🔧 Variables de Entorno
 
-Actualmente no se requieren variables de entorno, pero puedes configurar:
+Para que la aplicación funcione correctamente, necesitas configurar la API key
+de Google Sheets:
 
 ```env
 # .env.local
-NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
-```
+GOOGLE_SHEETS_API_KEY=tu_api_key_de_google_sheets
+
+
+### Obtener la API Key de Google Sheets
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2. Crea un nuevo proyecto o selecciona uno existente
+3. Habilita la API de Google Sheets
+4. Ve a "Credenciales" y crea una nueva API Key
+5. Restringe la API Key solo a la API de Google Sheets
+6. Copia la API Key y agrégala a tu archivo `.env.local`
 
 ## 📈 SEO y Performance
 
@@ -227,8 +236,6 @@ más detalles.
 
 - **[@aike0070](https://x.com/aike0070)** - Por crear y mantener el Google Sheet
   de datos
-- **Equipo KOI** - Por inspirar este proyecto
-- **Comunidad de KOI** - Por el apoyo y feedback
 
 ## 📞 Contacto
 
@@ -242,3 +249,4 @@ más detalles.
   <p>Hecho con ❤️ para la comunidad de KOI</p>
   <p>© 2025 KOI Calendar. Diseñado para la comunidad de KOI.</p>
 </div>
+```
