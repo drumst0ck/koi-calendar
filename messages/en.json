@@ -1,0 +1,70 @@
+{
+  "navigation": {
+    "home": "Home",
+    "matches": "Matches",
+    "schedule": "Schedule"
+  },
+  "hero": {
+    "title": "Match",
+    "titleHighlight": "Calendar",
+    "subtitle": "Follow all KOI esports team matches in real time.",
+    "subtitleSecond": "Never miss a competition.",
+    "cta": "View Matches"
+  },
+  "categories": {
+    "all": "All Games",
+    "lol": "League of Legends",
+    "valorant": "Valorant",
+    "tft": "Teamfight Tactics",
+    "rocketleague": "Rocket League",
+    "apexlegends": "Apex Legends",
+    "warzone": "Warzone",
+    "freefire": "Free Fire",
+    "pokemon": "Pokémon",
+    "fifa": "FIFA",
+    "honorkings": "Honor of Kings",
+    "League of Legends": "League of Legends",
+    "Valorant": "Valorant",
+    "Teamfight Tactics": "Teamfight Tactics",
+    "Rocket League": "Rocket League",
+    "Apex Legends": "Apex Legends",
+    "Warzone": "Warzone",
+    "Free Fire": "Free Fire",
+    "Pokémon": "Pokémon",
+    "FIFA": "FIFA",
+    "Call of Duty": "Call of Duty",
+    "Honor of Kings": "Honor of Kings"
+  },
+  "matches": {
+    "title": "Upcoming Matches",
+    "subtitle": "Stay updated with all KOI matches",
+    "loading": "Loading matches...",
+    "loadingDescription": "Getting the latest match data",
+    "error": "Error loading matches",
+    "retry": "Retry",
+    "noMatches": "No matches",
+    "noMatchesDescription": "No matches found for the selected category",
+    "phase": "Phase:",
+    "competition": "Competition:",
+    "stream": "Stream",
+    "watchOn": "Watch on",
+    "date": "Date",
+    "time": "Time"
+  },
+  "footer": {
+    "dataSource": "Data extracted in real time from the",
+    "officialSheet": "Official KOI Google Sheet",
+    "openSource": "This is an open source project that anyone can contribute to.",
+    "specialThanks": "Special thanks to",
+    "sheetMaintainer": "for creating and maintaining the data sheet.",
+    "developedBy": "Project developed by",
+    "viewOnGitHub": "View on GitHub",
+    "copyright": "© 2025 KOI Calendar. Designed for the KOI community."
+  },
+  "language": {
+    "select": "Language",
+    "spanish": "Español",
+    "english": "English",
+    "french": "Français"
+  }
+}

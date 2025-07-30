@@ -1,0 +1,71 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "matches": "Partidos",
+    "schedule": "Calendario"
+  },
+  "hero": {
+    "title": "Calendario de",
+    "titleHighlight": "Partidos",
+    "subtitle": "Sigue todos los partidos del equipo de esports KOI en tiempo real.",
+    "subtitleSecond": "Nunca te pierdas una competición.",
+    "cta": "Ver Partidos"
+  },
+  "categories": {
+    "all": "Todos los Juegos",
+    "valorant": "Valorant",
+    "lol": "League of Legends",
+    "cs2": "CS2",
+    "tft": "Teamfight Tactics",
+    "rocketleague": "Rocket League",
+    "apexlegends": "Apex Legends",
+    "freefire": "Free Fire",
+    "pokemon": "Pokémon",
+    "fifa": "FIFA",
+    "honorkings": "Honor of Kings",
+    "warzone": "Warzone",
+    "League of Legends": "League of Legends",
+    "Valorant": "Valorant",
+    "Teamfight Tactics": "Teamfight Tactics",
+    "Rocket League": "Rocket League",
+    "Apex Legends": "Apex Legends",
+    "Warzone": "Warzone",
+    "Free Fire": "Free Fire",
+    "Pokémon": "Pokémon",
+    "FIFA": "FIFA",
+    "Call of Duty": "Call of Duty",
+    "Honor of Kings": "Honor of Kings"
+  },
+  "matches": {
+    "title": "Próximos Partidos",
+    "subtitle": "Mantente al día con todos los partidos de KOI",
+    "loading": "Cargando partidos...",
+    "loadingDescription": "Obteniendo los últimos datos de partidos",
+    "error": "Error al cargar partidos",
+    "retry": "Reintentar",
+    "phase": "Fase:",
+    "competition": "Competición:",
+    "noMatches": "No hay partidos",
+    "noMatchesDescription": "No se encontraron partidos para la categoría seleccionada",
+    "stream": "Stream",
+    "watchOn": "Ver en",
+    "date": "Fecha",
+    "time": "Hora"
+  },
+  "footer": {
+    "dataSource": "Datos extraídos en tiempo real del",
+    "officialSheet": "Google Sheet oficial de KOI",
+    "openSource": "Este es un proyecto de código libre al que cualquiera puede contribuir.",
+    "specialThanks": "Agradecimientos especiales a",
+    "sheetMaintainer": "por crear y mantener el sheet de datos.",
+    "developedBy": "Proyecto desarrollado por",
+    "viewOnGitHub": "Ver en GitHub",
+    "copyright": "© 2025 KOI Calendar. Diseñado para la comunidad de KOI."
+  },
+  "language": {
+    "select": "Idioma",
+    "spanish": "Español",
+    "english": "English",
+    "french": "Français"
+  }
+}

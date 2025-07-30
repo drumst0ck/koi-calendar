@@ -1,0 +1,70 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "matches": "Matchs",
+    "schedule": "Calendrier"
+  },
+  "hero": {
+    "title": "Calendrier des",
+    "titleHighlight": "Matchs",
+    "subtitle": "Suivez tous les matchs de l'équipe esports KOI en temps réel.",
+    "subtitleSecond": "Ne manquez jamais une compétition.",
+    "cta": "Voir les Matchs"
+  },
+  "categories": {
+    "all": "Tous les Jeux",
+    "lol": "League of Legends",
+    "valorant": "Valorant",
+    "tft": "Teamfight Tactics",
+    "rocketleague": "Rocket League",
+    "apexlegends": "Apex Legends",
+    "warzone": "Warzone",
+    "freefire": "Free Fire",
+    "pokemon": "Pokémon",
+    "fifa": "FIFA",
+    "honorkings": "Honor of Kings",
+    "League of Legends": "League of Legends",
+    "Valorant": "Valorant",
+    "Teamfight Tactics": "Teamfight Tactics",
+    "Rocket League": "Rocket League",
+    "Apex Legends": "Apex Legends",
+    "Warzone": "Warzone",
+    "Free Fire": "Free Fire",
+    "Pokémon": "Pokémon",
+    "FIFA": "FIFA",
+    "Call of Duty": "Call of Duty",
+    "Honor of Kings": "Honor of Kings"
+  },
+  "matches": {
+    "title": "Prochains Matchs",
+    "subtitle": "Restez informé de tous les matchs de KOI",
+    "loading": "Chargement des matchs...",
+    "loadingDescription": "Récupération des dernières données de matchs",
+    "error": "Erreur lors du chargement des matchs",
+    "retry": "Réessayer",
+    "noMatches": "Aucun match",
+    "noMatchesDescription": "Aucun match trouvé pour la catégorie sélectionnée",
+    "phase": "Phase :",
+    "competition": "Compétition :",
+    "stream": "Stream",
+    "watchOn": "Regarder sur",
+    "date": "Date",
+    "time": "Heure"
+  },
+  "footer": {
+    "dataSource": "Données extraites en temps réel du",
+    "officialSheet": "Google Sheet officiel de KOI",
+    "openSource": "Il s'agit d'un projet open source auquel tout le monde peut contribuer.",
+    "specialThanks": "Remerciements spéciaux à",
+    "sheetMaintainer": "pour avoir créé et maintenu la feuille de données.",
+    "developedBy": "Projet développé par",
+    "viewOnGitHub": "Voir sur GitHub",
+    "copyright": "© 2025 KOI Calendar. Conçu pour la communauté KOI."
+  },
+  "language": {
+    "select": "Langue",
+    "spanish": "Español",
+    "english": "English",
+    "french": "Français"
+  }
+}

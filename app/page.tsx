@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSelector from '../components/LanguageSelector';
 import Head from 'next/head';
 
 // Custom hook for fetching matches
@@ -172,6 +174,8 @@ const parseStreams = (streamText: string, streamUrl?: string) => {
 };
 
 export default function Home() {
+  const t = useTranslations();
+  const locale = useLocale();
   const { matches, loading, error } = useMatches();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [filteredMatches, setFilteredMatches] = useState(matches);
@@ -263,20 +267,25 @@ export default function Home() {
             
             </div>
 
+            {/* Language Selector */}
+            <div className="absolute top-4 right-4">
+              <LanguageSelector currentLocale={locale} />
+            </div>
+
             {/* Main heading */}
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-shadow text-white">
-              Calendario de
+              {t('hero.title')}
               <br />
               <span className="text-[#6c5ce7]">
-                Partidos
+                {t('hero.titleHighlight')}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed text-shadow">
-              Sigue todos los partidos del equipo de esports KOI en tiempo real.
+              {t('hero.subtitle')}
               <br className="hidden md:block" />
-              Nunca te pierdas una competición.
+              {t('hero.subtitleSecond')}
             </p>
 
             {/* CTA Button */}
@@ -285,7 +294,7 @@ export default function Home() {
                 onClick={() => document.getElementById('matches')?.scrollIntoView({ behavior: 'smooth' })}
                 className="koi-button group relative inline-flex items-center justify-center px-10 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 koi-glow-hover"
               >
-                Ver Partidos
+                {t('hero.cta')}
                 <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -299,8 +308,8 @@ export default function Home() {
       <section className="relative py-16 border-t border-[#2d3436]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">Filtrar por Juego</h2>
-            <p className="text-gray-300 text-lg">Encuentra los partidos de tu juego favorito</p>
+            <h2 className="text-3xl font-bold mb-4 text-white">{t('matches.title')}</h2>
+            <p className="text-gray-300 text-lg">{t('matches.subtitle')}</p>
           </div>
           
           <div className="flex flex-wrap gap-3 justify-center">
@@ -317,7 +326,7 @@ export default function Home() {
                   }`}
                 >
                   
-                  <span>{category === 'all' ? 'Todos los Juegos' : category}</span>
+                  <span>{t(`categories.${category}`)}</span>
                 </button>
               );
             })}
@@ -333,8 +342,8 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-spin koi-glow">
                 <div className="w-8 h-8 bg-[#0d0d0d] rounded-full"></div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-300 mb-2">Cargando partidos...</h3>
-              <p className="text-gray-400 text-lg">Obteniendo datos actualizados del calendario</p>
+              <h3 className="text-2xl font-bold text-gray-300 mb-2">{t('matches.loading')}</h3>
+              <p className="text-gray-400 text-lg">{t('matches.loadingDescription')}</p>
             </div>
           ) : error ? (
             <div className="text-center py-20">
@@ -343,13 +352,13 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-300 mb-2">Error al cargar partidos</h3>
+              <h3 className="text-2xl font-bold text-gray-300 mb-2">{t('matches.error')}</h3>
               <p className="text-gray-400 text-lg mb-4">{error}</p>
               <button 
                 onClick={() => window.location.reload()}
                 className="koi-button px-6 py-3 rounded-lg transition-all duration-300 koi-glow-hover"
               >
-                Reintentar
+                {t('matches.retry')}
               </button>
             </div>
           ) : filteredMatches.length > 0 ? (
@@ -383,12 +392,12 @@ export default function Home() {
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center text-gray-300">
                           <span className="w-2 h-2 bg-[#6c5ce7] rounded-full mr-3"></span>
-                          <span className="text-gray-400 mr-2">Fase:</span>
+                          <span className="text-gray-400 mr-2">{t('matches.phase')}</span>
                           <span>{match.phase}</span>
                         </div>
                         <div className="flex items-center text-gray-300">
                           <span className="w-2 h-2 bg-[#00cec9] rounded-full mr-3"></span>
-                          <span className="text-gray-400 mr-2">Competición:</span>
+                          <span className="text-gray-400 mr-2">{t('matches.competition')}</span>
                           <span>{match.competition}</span>
                         </div>
                       </div>
@@ -399,7 +408,7 @@ export default function Home() {
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-2">
                             <div className="w-2 h-2 bg-[#fd79a8] rounded-full animate-pulse"></div>
-                            <span className="text-gray-400 text-sm">Stream</span>
+                            <span className="text-gray-400 text-sm">{t('matches.stream')}</span>
                           </div>
                           <div className="flex flex-wrap gap-2 justify-end">
                             {parseStreams(match.stream, match.streamUrl).map((stream, index) => (
@@ -436,8 +445,8 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-300 mb-2">No hay partidos</h3>
-              <p className="text-gray-400 text-lg">No se encontraron partidos para la categoría seleccionada</p>
+              <h3 className="text-2xl font-bold text-gray-300 mb-2">{t('matches.noMatches')}</h3>
+              <p className="text-gray-400 text-lg">{t('matches.noMatchesDescription')}</p>
             </div>
           )}
         </div>
@@ -457,23 +466,23 @@ export default function Home() {
             </div>
             
             <p className="text-gray-300 max-w-2xl mx-auto mb-6">
-              Datos extraídos en tiempo real del{' '}
+              {t('footer.dataSource')}{' '}
               <a
                 href="https://docs.google.com/spreadsheets/u/0/d/1i3ji5iDuACafqPPR0CPGI4ARk6Z2d853KeKcHef2Wto/htmlview?pli=1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
               >
-                Google Sheet oficial de KOI
+                {t('footer.officialSheet')}
               </a>
             </p>
             
             <div className="text-gray-400 max-w-3xl mx-auto mb-6 text-center">
               <p className="mb-3">
-                Este es un proyecto de código libre al que cualquiera puede contribuir.
+                {t('footer.openSource')}
               </p>
               <p className="mb-3">
-                Agradecimientos especiales a{' '}
+                {t('footer.specialThanks')}{' '}
                 <a
                   href="https://x.com/aike0070"
                   target="_blank"
@@ -482,10 +491,10 @@ export default function Home() {
                 >
                   @aike0070
                 </a>
-                {' '}por crear y mantener el sheet de datos.
+                {' '}{t('footer.sheetMaintainer')}
               </p>
               <p>
-                Proyecto desarrollado por{' '}
+                {t('footer.developedBy')}{' '}
                 <a
                   href="https://github.com/drumst0ck"
                   target="_blank"
@@ -501,13 +510,13 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="text-cyan-400 hover:text-violet-400 transition-colors underline underline-offset-4 font-semibold"
                 >
-                  Ver en GitHub
+                  {t('footer.viewOnGitHub')}
                 </a>
               </p>
             </div>
             
             <div className="pt-6 text-sm text-gray-500">
-              © 2025 KOI Calendar. Diseñado para la comunidad de KOI.
+              {t('footer.copyright')}
             </div>
           </div>
         </div>
