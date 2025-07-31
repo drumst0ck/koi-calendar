@@ -36,6 +36,76 @@ const getCategoryColor = (category: string) => {
   return colors[category as keyof typeof colors] || 'from-violet-500 to-purple-500';
 };
 
+const parseStreams = (streamText: string, streamUrl?: string) => {
+  // If we have a direct URL, use it
+  if (streamUrl) {
+    let platform = 'Twitch'; // Default platform
+    let displayName = streamText;
+    
+    // Detect platform from URL
+    if (streamUrl.includes('youtube.com') || streamUrl.includes('youtu.be')) {
+      platform = 'YouTube';
+    } else if (streamUrl.includes('twitch.tv')) {
+      platform = 'Twitch';
+    }
+    
+    return [{ url: streamUrl, platform, original: streamText, displayName }];
+  }
+  
+  // Fallback to old parsing logic for backward compatibility
+  let streams: string[] = [];
+  
+  // Handle different stream formats
+  if (streamText.includes('twitch/')) {
+    // Extract everything after 'twitch/' and split by '/'
+    const twitchPart = streamText.substring(streamText.indexOf('twitch/') + 7);
+    const twitchChannels = twitchPart.split('/');
+    streams = twitchChannels.map(channel => `twitch/${channel}`);
+  } else if (streamText.includes('youtube/')) {
+    // Extract everything after 'youtube/' and split by '/'
+    const youtubePart = streamText.substring(streamText.indexOf('youtube/') + 8);
+    const youtubeChannels = youtubePart.split('/');
+    streams = youtubeChannels.map(channel => `youtube/${channel}`);
+  } else {
+    // Handle space or comma separated streams
+    streams = streamText.split(/[,\s]+/).filter(s => s.length > 0);
+  }
+  
+  return streams.map((stream, index) => {
+    let url = '';
+    let platform = 'Twitch'; // Default platform
+    let displayName = stream;
+    
+    // Convert stream text to proper URL
+    if (stream.includes('twitch/')) {
+      const channelName = stream.replace('twitch/', '');
+      url = `https://twitch.tv/${channelName}`;
+      platform = 'Twitch';
+      displayName = channelName;
+    } else if (stream.includes('youtube/')) {
+      const channelName = stream.replace('youtube/', '');
+      url = `https://youtube.com/@${channelName}`;
+      platform = 'YouTube';
+      displayName = channelName;
+    } else if (stream.startsWith('twitch.tv/')) {
+      url = `https://${stream}`;
+      platform = 'Twitch';
+      displayName = stream.replace('twitch.tv/', '');
+    } else if (stream.startsWith('youtube.com/')) {
+      url = `https://${stream}`;
+      platform = 'YouTube';
+      displayName = stream.replace('youtube.com/@', '').replace('youtube.com/', '');
+    } else {
+      // For streamers without platform prefix, assume Twitch
+      url = `https://twitch.tv/${stream}`;
+      platform = 'Twitch';
+      displayName = stream;
+    }
+    
+    return { url, platform, original: stream, displayName };
+  });
+};
+
 const parseMatchDate = (match: Match): Date | null => {
   try {
     const dateStr = match.date?.trim();
@@ -211,6 +281,44 @@ export default function CalendarView({ matches }: CalendarViewProps) {
                             <span>{match.competition}</span>
                           </div>
                         </div>
+                        
+                        {(match.stream || match.streamUrl) && (
+                          <div className="mt-3 pt-3 border-t border-gray-600">
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 bg-[#fd79a8] rounded-full animate-pulse"></div>
+                                <span className="text-gray-400 text-sm">{t('matches.stream')}</span>
+                              </div>
+                              <div className="flex flex-wrap gap-2 justify-end">
+                                {parseStreams(match.stream, match.streamUrl).map((stream, index) => (
+                                  <a
+                                    key={index}
+                                    href={stream.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-flex items-center px-3 py-1 text-xs font-semibold transition-all duration-300 hover:scale-105 rounded-full ${
+                                      isPastMatch 
+                                        ? 'bg-gray-600 text-gray-300 cursor-not-allowed' 
+                                        : 'text-white bg-gradient-to-r from-violet-500 to-blue-500 hover:from-blue-500 hover:to-cyan-500'
+                                    }`}
+                                    {...(isPastMatch && { 'aria-disabled': 'true', onClick: (e) => e.preventDefault() })}
+                                  >
+                                    {stream.platform === 'YouTube' ? (
+                                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                      </svg>
+                                    ) : (
+                                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24L11.57 19.714h4.286L24 11.571V0zm16.286 10.857l-4.286 4.286H9.714L7.714 17.143v-2H2.571V1.714H22.286z"/>
+                                      </svg>
+                                    )}
+                                    {stream.displayName}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );

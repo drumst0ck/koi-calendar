@@ -48,6 +48,7 @@
     "noMatches": "No hay partidos",
     "noMatchesDescription": "No se encontraron partidos para la categoría seleccionada",
     "stream": "Stream",
+    "watchStream": "Ver Stream",
     "watchOn": "Ver en",
     "date": "Fecha",
     "time": "Hora",

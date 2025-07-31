@@ -47,6 +47,7 @@
     "phase": "Phase:",
     "competition": "Competition:",
     "stream": "Stream",
+    "watchStream": "Watch Stream",
     "calendar": {
       "title": "Calendar View",
       "eventsFor": "Events for",
