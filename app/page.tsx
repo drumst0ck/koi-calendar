@@ -607,12 +607,86 @@ export default function Home() {
 
   const categories = ['all', ...Array.from(new Set(matches.map(match => match.category)))];
 
-  useEffect(() => {
-    if (selectedCategory === 'all') {
-      setFilteredMatches(matches);
-    } else {
-      setFilteredMatches(matches.filter(match => match.category === selectedCategory));
+  // Function to parse Spanish date and create Date object
+  const parseMatchDate = (match: Match): Date | null => {
+    try {
+      const dateStr = match.date?.trim();
+      const timeStr = match.time?.trim();
+      
+      if (!dateStr || !timeStr || timeStr.toUpperCase() === 'TBD') {
+        return null;
+      }
+      
+      const monthMap: { [key: string]: string } = {
+        'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+        'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+        'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+      };
+      
+      const parts = dateStr.toLowerCase().split(' ');
+      if (parts.length !== 2) return null;
+      
+      const day = parts[0].padStart(2, '0');
+      const monthName = parts[1];
+      const month = monthMap[monthName];
+      
+      if (!month) return null;
+      
+      const currentYear = new Date().getFullYear();
+      const isoDate = `${currentYear}-${month}-${day}`;
+      const matchDate = new Date(`${isoDate}T${timeStr}`);
+      
+      return isNaN(matchDate.getTime()) ? null : matchDate;
+    } catch {
+      return null;
     }
+  };
+
+  // Function to sort matches: upcoming first (by date), then past matches last
+  const sortMatches = (matchesToSort: Match[]): Match[] => {
+    const now = new Date();
+    const matchesWithDates = matchesToSort.map(match => ({
+      ...match,
+      parsedDate: parseMatchDate(match)
+    }));
+    
+    // Separate matches into upcoming and past
+    const upcomingMatches = matchesWithDates.filter(match => 
+      match.parsedDate && match.parsedDate > now
+    );
+    const pastMatches = matchesWithDates.filter(match => 
+      match.parsedDate && match.parsedDate <= now
+    );
+    const invalidMatches = matchesWithDates.filter(match => !match.parsedDate);
+    
+    // Sort upcoming matches by date (earliest first)
+    upcomingMatches.sort((a, b) => {
+      if (!a.parsedDate || !b.parsedDate) return 0;
+      return a.parsedDate.getTime() - b.parsedDate.getTime();
+    });
+    
+    // Sort past matches by date (most recent first)
+    pastMatches.sort((a, b) => {
+      if (!a.parsedDate || !b.parsedDate) return 0;
+      return b.parsedDate.getTime() - a.parsedDate.getTime();
+    });
+    
+    // Return: upcoming matches first, then past matches, then invalid dates
+    return [...upcomingMatches, ...pastMatches, ...invalidMatches].map(({ parsedDate, ...match }) => match);
+  };
+
+  useEffect(() => {
+    let filtered: Match[];
+    
+    if (selectedCategory === 'all') {
+      filtered = matches;
+    } else {
+      filtered = matches.filter(match => match.category === selectedCategory);
+    }
+    
+    // Apply sorting to filtered matches
+    const sorted = sortMatches(filtered);
+    setFilteredMatches(sorted);
   }, [selectedCategory, matches]);
 
   return (
@@ -747,25 +821,49 @@ export default function Home() {
             </div>
           ) : filteredMatches.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredMatches.map((match) => (
-                <div
-                  key={match.id}
-                  className="group relative koi-card rounded-2xl p-6 hover:transform hover:scale-[1.02] transition-all duration-500 overflow-visible"
-                >
-                  {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  <div className="relative z-10">
-                    {/* Header */}
-                    <div className="flex items-center justify-between mb-6">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${getCategoryColor(match.category)}`}>
-                        {match.category}
-                      </span>
-                      <div className="text-right">
-                        <div className="text-white font-semibold text-sm">{match.date}</div>
-                        <div className="text-gray-400 text-xs">{match.time}</div>
+              {filteredMatches.map((match) => {
+                const matchDate = parseMatchDate(match);
+                const isPastMatch = matchDate && matchDate <= new Date();
+                
+                return (
+                  <div
+                    key={match.id}
+                    className={`group relative koi-card rounded-2xl p-6 hover:transform hover:scale-[1.02] transition-all duration-500 overflow-visible ${
+                      isPastMatch ? 'opacity-60 saturate-50' : ''
+                    }`}
+                  >
+                    {/* Past match indicator */}
+                    {isPastMatch && (
+                      <div className="absolute top-4 left-4 z-20">
+                        <div className="flex items-center space-x-1 px-2 py-1 bg-gray-600/80 rounded-full text-xs text-gray-300">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          </svg>
+                          <span>Finalizado</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    
+                    {/* Gradient overlay on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+                      isPastMatch ? 'from-gray-500/10 to-gray-600/10' : 'from-violet-500/10 to-cyan-500/10'
+                    }`}></div>
+                    
+                    <div className="relative z-10">
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-6">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${
+                          isPastMatch ? 'from-gray-500 to-gray-600' : getCategoryColor(match.category)
+                        }`}>
+                          {match.category}
+                        </span>
+                        <div className="text-right">
+                          <div className={`font-semibold text-sm ${
+                            isPastMatch ? 'text-gray-400' : 'text-white'
+                          }`}>{match.date}</div>
+                          <div className="text-gray-400 text-xs">{match.time}</div>
+                        </div>
+                      </div>
 
                     {/* Match details */}
                     <div className="space-y-4">
@@ -819,16 +917,23 @@ export default function Home() {
                         </div>
                       </div>
 
-                    {/* Calendar Reminder Button */}
-                     <CalendarButton
-                       match={match}
-                       isOpen={openDropdown === match.id}
-                       onToggle={() => setOpenDropdown(openDropdown === match.id ? null : match.id)}
-                       t={t}
-                     />
+                      {/* Calendar Reminder Button - Only show for upcoming matches */}
+                      {(() => {
+                        const matchDate = parseMatchDate(match);
+                        const isPastMatch = matchDate && matchDate < new Date();
+                        return !isPastMatch ? (
+                          <CalendarButton
+                            match={match}
+                            isOpen={openDropdown === match.id}
+                            onToggle={() => setOpenDropdown(openDropdown === match.id ? null : match.id)}
+                            t={t}
+                          />
+                        ) : null;
+                      })()}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-20">
