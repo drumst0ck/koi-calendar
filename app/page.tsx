@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { createPortal } from 'react-dom';
 import LanguageSelector from '../components/LanguageSelector';
+import CalendarView from '../components/CalendarView';
 import Head from 'next/head';
 
 // Utility function to create calendar events
@@ -514,6 +515,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [filteredMatches, setFilteredMatches] = useState(matches);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+  const [currentView, setCurrentView] = useState<'list' | 'calendar'>('list');
 
   // No need for global click handler since we use backdrop in portal
 
@@ -770,6 +772,38 @@ export default function Home() {
             <p className="text-gray-300 text-lg">{t('matches.subtitle')}</p>
           </div>
           
+          {/* View Toggle */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex bg-[#2d3436]/30 rounded-full p-1 border border-[#636e72]/50">
+              <button
+                onClick={() => setCurrentView('list')}
+                className={`inline-flex items-center space-x-2 px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
+                  currentView === 'list'
+                    ? 'koi-button text-white koi-glow'
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                <span>Lista</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('calendar')}
+                className={`inline-flex items-center space-x-2 px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
+                  currentView === 'calendar'
+                    ? 'koi-button text-white koi-glow'
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>{t('calendar.title')}</span>
+              </button>
+            </div>
+          </div>
+          
           <div className="flex flex-wrap gap-3 justify-center">
             {categories.map((category) => {
               const icon = getCategoryIcon(category);
@@ -820,6 +854,9 @@ export default function Home() {
               </button>
             </div>
           ) : filteredMatches.length > 0 ? (
+            currentView === 'calendar' ? (
+              <CalendarView matches={filteredMatches} />
+            ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredMatches.map((match) => {
                 const matchDate = parseMatchDate(match);
@@ -935,6 +972,7 @@ export default function Home() {
                 );
               })}
             </div>
+            )
           ) : (
             <div className="text-center py-20">
               <div className="w-24 h-24 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 opacity-50 koi-glow">

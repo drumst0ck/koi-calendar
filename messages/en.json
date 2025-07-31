@@ -47,6 +47,12 @@
     "phase": "Phase:",
     "competition": "Competition:",
     "stream": "Stream",
+    "calendar": {
+      "title": "Calendar View",
+      "eventsFor": "Events for",
+      "selectDate": "Select a date",
+      "noEvents": "No events for this date"
+    },
     "watchOn": "Watch on",
     "date": "Date",
     "time": "Time",
@@ -55,6 +61,12 @@
     "reminderError": "Error adding reminder",
     "addToCalendar": "Add to Calendar",
     "downloadICS": "Download ICS file"
+  },
+  "calendar": {
+    "title": "Calendar View",
+    "eventsFor": "Events for",
+    "selectDate": "Select a date",
+    "noEvents": "No events for this date"
   },
   "footer": {
     "dataSource": "Data extracted in real time from the",

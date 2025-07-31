@@ -57,6 +57,12 @@
     "addToCalendar": "Añadir al Calendario",
     "downloadICS": "Descargar archivo ICS"
   },
+  "calendar": {
+    "title": "Vista de Calendario",
+    "eventsFor": "Eventos para",
+    "selectDate": "Selecciona una fecha",
+    "noEvents": "No hay eventos para esta fecha"
+  },
   "footer": {
     "dataSource": "Datos extraídos en tiempo real del",
     "officialSheet": "Google Sheet oficial de KOI",

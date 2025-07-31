@@ -20,23 +20,21 @@
   --border-color: rgba(108, 92, 231, 0.2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: "Inter", var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: linear-gradient(180deg, var(--koi-black) 0%, var(--koi-dark-purple) 50%, var(--koi-black) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--koi-black) 0%,
+    var(--koi-dark-purple) 50%,
+    var(--koi-black) 100%
+  );
   color: var(--foreground);
-  font-family: 'Inter', var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
-    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Inter", var(--font-geist-sans), -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
@@ -103,14 +101,22 @@ a:focus-visible {
 }
 
 .koi-gradient-text {
-  background: linear-gradient(90deg, var(--koi-violet) 0%, var(--koi-cyan) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--koi-violet) 0%,
+    var(--koi-cyan) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .koi-button {
-  background: linear-gradient(90deg, var(--koi-violet) 0%, var(--koi-blue) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--koi-violet) 0%,
+    var(--koi-blue) 100%
+  );
   border: none;
   color: white;
   font-weight: 600;
@@ -183,4 +189,187 @@ a:focus-visible {
 /* Backdrop blur utility */
 .backdrop-blur-strong {
   backdrop-filter: blur(20px);
+}
+
+/* Calendar Styles */
+.rdp {
+  --rdp-cell-size: 52px;
+  --rdp-accent-color: var(--koi-violet);
+  --rdp-background-color: var(--koi-black);
+  --rdp-accent-color-dark: var(--koi-blue);
+  --rdp-background-color-dark: var(--koi-dark-purple);
+  --rdp-outline: 2px solid var(--koi-violet);
+  --rdp-outline-selected: 2px solid var(--koi-cyan);
+  margin: 1rem;
+  color: white;
+  min-width: 400px;
+}
+
+.rdp-months {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rdp-month {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  min-width: 380px;
+}
+
+.rdp-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: white;
+  font-weight: 600;
+  position: relative;
+  padding: 0 50px;
+  min-height: 50px;
+}
+
+.rdp-caption_label {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+}
+
+.rdp-nav {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.rdp-button_previous,
+.rdp-button_next {
+  background: var(--koi-violet) !important;
+  border: none !important;
+  border-radius: 0.5rem;
+  color: white !important;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1 !important;
+}
+
+.rdp-button_previous:hover,
+.rdp-button_next:hover {
+  background: var(--koi-blue) !important;
+  transform: scale(1.05);
+}
+
+.rdp-button_previous:disabled,
+.rdp-button_next:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed;
+}
+
+.rdp-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.rdp-head_cell {
+  color: var(--koi-light-gray);
+  font-weight: 500;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.rdp-cell {
+  text-align: center;
+  position: relative;
+  padding: 2px;
+}
+
+.rdp-button {
+  width: var(--rdp-cell-size);
+  height: var(--rdp-cell-size);
+  border: none;
+  background: transparent;
+  color: white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+  margin: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rdp-button:hover {
+  background: rgba(139, 92, 246, 0.2);
+  transform: scale(1.1);
+}
+
+.rdp-button[data-selected="true"] {
+  background: var(--koi-violet);
+  color: white;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+}
+
+.rdp-button[data-today="true"] {
+  background: rgba(6, 182, 212, 0.2);
+  border: 2px solid var(--koi-cyan);
+  color: var(--koi-cyan);
+  font-weight: 700;
+}
+
+.rdp-button[data-outside="true"] {
+  color: var(--koi-light-gray);
+  opacity: 0.5;
+}
+
+.rdp-button[data-disabled="true"] {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rdp-button[data-disabled="true"]:hover {
+  background: transparent;
+  transform: none;
+}
+
+/* Calendar event indicators */
+.calendar-event-indicator {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--koi-cyan);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+}
+
+.calendar-multiple-events {
+  background: linear-gradient(45deg, var(--koi-violet), var(--koi-cyan));
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
