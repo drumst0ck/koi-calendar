@@ -5,6 +5,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { format, isSameDay, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useTranslations } from 'next-intl';
+import { createPortal } from 'react-dom';
 
 interface Match {
   id: number;
@@ -106,6 +107,85 @@ const parseStreams = (streamText: string, streamUrl?: string) => {
   });
 };
 
+// Utility function to create calendar events
+const createCalendarEvent = (match: Match) => {
+  // Validate and parse date/time
+  const dateStr = match.date?.trim();
+  const timeStr = match.time?.trim();
+  
+  if (!dateStr || !timeStr) {
+    throw new Error('Invalid date or time value');
+  }
+  
+  // Skip matches with TBD time
+  if (timeStr.toUpperCase() === 'TBD') {
+    throw new Error('Time is TBD (To Be Determined)');
+  }
+  
+  // Parse date (format: DD/MM/YYYY)
+  const [day, month, year] = dateStr.split('/');
+  if (!day || !month || !year) {
+    throw new Error('Invalid date format');
+  }
+  
+  // Parse time (format: HH:MM)
+  const [hours, minutes] = timeStr.split(':');
+  if (!hours || !minutes) {
+    throw new Error('Invalid time format');
+  }
+  
+  // Create date object
+  const startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
+  
+  if (isNaN(startDate.getTime())) {
+    throw new Error('Invalid date/time values');
+  }
+  
+  // End time (1 hour later)
+  const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+  
+  // Format dates for different calendar services
+  const formatDate = (date: Date) => {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  };
+  
+  const startFormatted = formatDate(startDate);
+  const endFormatted = formatDate(endDate);
+  
+  // Event details
+  const title = encodeURIComponent(match.match);
+  const description = encodeURIComponent(`${match.phase} - ${match.competition}`);
+  const location = encodeURIComponent('Online');
+  
+  // Google Calendar URL
+  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startFormatted}/${endFormatted}&details=${description}&location=${location}`;
+  
+  // Outlook Calendar URL
+  const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${startFormatted}&enddt=${endFormatted}&body=${description}&location=${location}`;
+  
+  // ICS file content
+  const icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//KOI Calendar//ES',
+    'BEGIN:VEVENT',
+    `UID:${match.id}@koicalendar.com`,
+    `DTSTART:${startFormatted}`,
+    `DTEND:${endFormatted}`,
+    `SUMMARY:${match.match}`,
+    `DESCRIPTION:${match.phase} - ${match.competition}`,
+    'LOCATION:Online',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  
+  return {
+    google: googleUrl,
+    outlook: outlookUrl,
+    ics: icsContent
+  };
+};
+
 const parseMatchDate = (match: Match): Date | null => {
   try {
     const dateStr = match.date?.trim();
@@ -140,8 +220,233 @@ const parseMatchDate = (match: Match): Date | null => {
   }
 };
 
+// Calendar Button Component
+const CalendarButton = ({ match, isOpen, onToggle, t }: {
+  match: Match;
+  isOpen: boolean;
+  onToggle: () => void;
+  t: any;
+}) => {
+
+  return (
+    <div className="mt-4 pt-4 border-t border-[#2d3436]/50 group-hover:border-[#6c5ce7]/30 transition-colors relative">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('Calendar button clicked for match:', match);
+          onToggle();
+        }}
+        className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-500 hover:from-green-500 hover:to-emerald-500 rounded-lg transition-all duration-300 hover:scale-105 koi-glow-hover"
+      >
+        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        {t('matches.addToCalendar')}
+        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      <CalendarModal
+        isOpen={isOpen}
+        onClose={onToggle}
+        match={match}
+        t={t}
+      />
+    </div>
+  );
+};
+
+const CalendarModal = ({ isOpen, onClose, match, t }: {
+  isOpen: boolean;
+  onClose: () => void;
+  match: Match;
+  t: any;
+}) => {
+  if (!isOpen || typeof window === 'undefined') return null;
+
+  // Detectar si es un dispositivo Apple (iOS/macOS)
+  const isAppleDevice = () => {
+    if (typeof window === 'undefined') return false;
+    const userAgent = window.navigator.userAgent;
+    return /iPad|iPhone|iPod|Macintosh/.test(userAgent);
+  };
+
+  // Función para crear archivo ICS y abrirlo en el calendario nativo de Apple
+  const openAppleCalendar = () => {
+    try {
+      const calendarEvent = createCalendarEvent(match);
+      
+      // Crear data URL para el archivo ICS
+      const dataUrl = `data:text/calendar;charset=utf-8,${encodeURIComponent(calendarEvent.ics)}`;
+      
+      // Detectar el dispositivo
+      const userAgent = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+      const isMac = /Macintosh/.test(userAgent);
+      
+      if (isIOS) {
+        // Para iOS: usar data URL que iOS puede abrir directamente
+        window.open(dataUrl, '_blank');
+      } else if (isMac) {
+        // Para macOS: usar data URL que macOS puede abrir con Calendar.app
+        window.open(dataUrl, '_blank');
+      } else {
+        // Fallback para otros dispositivos: descargar archivo
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+      
+      onClose();
+     } catch (error) {
+       console.error('Error creating calendar event:', error);
+       alert('Error: Fecha u hora inválida para este partido');
+     }
+  };
+
+  return createPortal(
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-[#2d3436] border border-[#636e72]/50 rounded-xl shadow-2xl max-w-sm w-full mx-4 overflow-hidden">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-[#636e72]/30">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">{t('matches.addToCalendar')}</h3>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-colors p-1"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <p className="text-sm text-gray-400 mt-1">{match.match}</p>
+        </div>
+        
+        {/* Options */}
+        <div className="py-2">
+          {/* Botón específico para dispositivos Apple */}
+          {isAppleDevice() && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('Apple Calendar button clicked for match:', match);
+                openAppleCalendar();
+              }}
+              className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
+            >
+              <svg className="w-5 h-5 mr-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <div>
+                <div className="font-medium">Calendario de Apple</div>
+                <div className="text-xs text-gray-400">Abrir en Calendario (iOS/macOS)</div>
+              </div>
+            </button>
+          )}
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log('Google Calendar button clicked for match:', match);
+              try {
+                const calendarEvent = createCalendarEvent(match);
+                console.log('Calendar event created:', calendarEvent);
+                window.open(calendarEvent.google, '_blank');
+                onClose();
+              } catch (error) {
+                console.error('Error creating calendar event:', error);
+                alert('Error: Fecha u hora inválida para este partido');
+              }
+            }}
+            className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
+          >
+            <svg className="w-5 h-5 mr-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <div>
+              <div className="font-medium">Google Calendar</div>
+              <div className="text-xs text-gray-400">Abrir en Google Calendar</div>
+            </div>
+          </button>
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              try {
+                const calendarEvent = createCalendarEvent(match);
+                window.open(calendarEvent.outlook, '_blank');
+                onClose();
+              } catch (error) {
+                console.error('Error creating calendar event:', error);
+                alert('Error: Fecha u hora inválida para este partido');
+              }
+            }}
+            className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
+          >
+            <svg className="w-5 h-5 mr-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7.462 0H0v24h7.462V0zM24 5.385H9.231v4.615H24V5.385zM24 14.769H9.231V24H24v-9.231z"/>
+            </svg>
+            <div>
+              <div className="font-medium">Outlook Calendar</div>
+              <div className="text-xs text-gray-400">Abrir en Outlook</div>
+            </div>
+          </button>
+          
+          <button
+              onClick={(e) => {
+                e.stopPropagation();
+                try {
+                  const calendarEvent = createCalendarEvent(match);
+                  const blob = new Blob([calendarEvent.ics], { type: 'text/calendar' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `${match.match.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  onClose();
+                } catch (error) {
+                  console.error('Error creating calendar event:', error);
+                  alert('Error: Fecha u hora inválida para este partido');
+                }
+              }}
+              className="w-full px-6 py-4 text-left text-white hover:bg-[#636e72]/30 transition-colors flex items-center"
+            >
+              <svg className="w-5 h-5 mr-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <div>
+                <div className="font-medium">Descargar archivo ICS</div>
+                <div className="text-xs text-gray-400">Para otros calendarios</div>
+              </div>
+            </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
 export default function CalendarView({ matches }: CalendarViewProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const t = useTranslations();
 
   // Parse matches and group by date
@@ -318,6 +623,16 @@ export default function CalendarView({ matches }: CalendarViewProps) {
                               </div>
                             </div>
                           </div>
+                        )}
+                        
+                        {/* Calendar Reminder Button - Only show for upcoming matches */}
+                        {!isPastMatch && (
+                          <CalendarButton
+                            match={match}
+                            isOpen={openDropdown === match.id}
+                            onToggle={() => setOpenDropdown(openDropdown === match.id ? null : match.id)}
+                            t={t}
+                          />
                         )}
                       </div>
                     </div>
