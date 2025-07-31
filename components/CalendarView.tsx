@@ -37,6 +37,34 @@ const getCategoryColor = (category: string) => {
   return colors[category as keyof typeof colors] || 'from-violet-500 to-purple-500';
 };
 
+const getCategoryTextColor = (category: string) => {
+  const textColors = {
+    'League of Legends': 'text-blue-100',
+    'VALORANT': 'text-red-100',
+    'Rocket League': 'text-orange-100',
+    'Apex Legends': 'text-purple-100',
+    'Free Fire': 'text-green-100',
+    'Honor of Kings': 'text-yellow-100',
+    'Pokémon': 'text-pink-100',
+    'Call of Duty': 'text-gray-100',
+  };
+  return textColors[category as keyof typeof textColors] || 'text-violet-100';
+};
+
+const getCategoryAccentColor = (category: string) => {
+  const accentColors = {
+    'League of Legends': 'text-cyan-300',
+    'VALORANT': 'text-pink-300',
+    'Rocket League': 'text-yellow-300',
+    'Apex Legends': 'text-indigo-300',
+    'Free Fire': 'text-emerald-300',
+    'Honor of Kings': 'text-orange-300',
+    'Pokémon': 'text-rose-300',
+    'Call of Duty': 'text-slate-300',
+  };
+  return accentColors[category as keyof typeof accentColors] || 'text-purple-300';
+};
+
 const parseStreams = (streamText: string, streamUrl?: string) => {
   // If we have a direct URL, use it
   if (streamUrl) {
@@ -562,27 +590,35 @@ export default function CalendarView({ matches }: CalendarViewProps) {
                             {match.category}
                           </span>
                           <span className={`text-sm font-medium ${
-                            isPastMatch ? 'text-gray-400' : 'text-white'
+                            isPastMatch ? 'text-gray-400' : getCategoryAccentColor(match.category)
                           }`}>
                             {match.time}
                           </span>
                         </div>
                         
                         <h4 className={`font-semibold ${
-                          isPastMatch ? 'text-gray-300' : 'text-white'
+                          isPastMatch ? 'text-gray-300' : getCategoryTextColor(match.category)
                         }`}>
                           {match.match}
                         </h4>
                         
                         <div className="text-sm space-y-1">
-                          <div className="flex items-center text-gray-300">
+                          <div className={`flex items-center ${
+                            isPastMatch ? 'text-gray-300' : getCategoryAccentColor(match.category)
+                          }`}>
                             <span className="w-2 h-2 bg-[#fd79a8] rounded-full mr-2"></span>
-                            <span className="text-gray-400 mr-2">{t('matches.phase')}</span>
+                            <span className={`mr-2 ${
+                              isPastMatch ? 'text-gray-400' : 'text-gray-300'
+                            }`}>{t('matches.phase')}</span>
                             <span>{match.phase}</span>
                           </div>
-                          <div className="flex items-center text-gray-300">
+                          <div className={`flex items-center ${
+                            isPastMatch ? 'text-gray-300' : getCategoryAccentColor(match.category)
+                          }`}>
                             <span className="w-2 h-2 bg-[#00cec9] rounded-full mr-2"></span>
-                            <span className="text-gray-400 mr-2">{t('matches.competition')}</span>
+                            <span className={`mr-2 ${
+                              isPastMatch ? 'text-gray-400' : 'text-gray-300'
+                            }`}>{t('matches.competition')}</span>
                             <span>{match.competition}</span>
                           </div>
                         </div>

@@ -191,6 +191,8 @@ const getCategoryColor = (category: string) => {
   }
 };
 
+
+
 const getCategoryIcon = (category: string) => {
   switch (category.toLowerCase()) {
     case 'league of legends':
